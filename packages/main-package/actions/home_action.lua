@@ -7,5 +7,7 @@ return {
     headers = {
         ["content-type"] = "text/html",
     },
-    body = render("index.html", {})
+    body = render("index.html", {
+        message = "Hello world"
+    })
 }
