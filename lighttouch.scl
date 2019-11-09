@@ -1,0 +1,7 @@
+settings = {
+  theme = "main-theme",
+  log_level = "trace",
+  sitename = "Lighttouch",
+  user = "admin",
+  password = "admin",
+}
