@@ -8,6 +8,7 @@ return {
         ["content-type"] = "text/html",
     },
     body = render("index.html", {
-        message = "Hello world"
+        message = "Hello world",
+        TITLE = "Home"
     })
 }

@@ -8,5 +8,6 @@ return {
         ["content-type"] = "text/html",
     },
     body = render("post.html", {
+        TITLE = settings.sitename,
     })
 }
