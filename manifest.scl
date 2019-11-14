@@ -1,0 +1,12 @@
+imports = {
+  lighttouch-json-interface = "packages/lighttouch-json-interface",
+  lighttouch-html-interface = "packages/lighttouch-html-interface",
+}
+
+lighttouch-json-interface = {
+  url = "https://github.com/lighttouch-packages/json-interface.git",
+}
+
+lighttouch-html-interface = {
+  url = "https://github.com/lighttouch-packages/html-interface.git",
+}
