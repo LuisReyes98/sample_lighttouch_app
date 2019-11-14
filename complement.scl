@@ -1,0 +1,13 @@
+data = "Lorem ipsum"
+
+an_array = [
+    "1 Lorem",
+    "2 Lorem",
+    "3 Lorem",
+    "4 Lorem",
+]
+
+a_map = {
+    index = "index Lorem ipsum",
+    post = "post ipsum lorem"
+}

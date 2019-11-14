@@ -9,6 +9,7 @@ return {
     },
     body = render("index.html", {
         message = "Hello world",
-        TITLE = "Home"
+        TITLE = "Home",
+        complement = settings.complement
     })
 }

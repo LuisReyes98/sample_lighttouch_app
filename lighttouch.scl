@@ -6,4 +6,5 @@ settings = {
   password = "admin",
   secret_important_information = "xxxxxxxxxxxxxxxxx",
   api_key = "xxxxxxxxxxxxxxxxxxxxx",
+  complement = include "complement.scl",
 }

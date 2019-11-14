@@ -4,4 +4,22 @@
     <h1 title>Welcome to Lighttouch powered by Torchbear</h1>
     <p>{{message}}</p>
     <a link href="/posts">Go to posts</a>
+    <ul>
+        <li>{{complement}}</li>
+    </ul>
+    <br>
+        <ul>
+            <li>{{complement.data}}</li>
+        </ul>
+    <br>
+        <ul>
+            {% for com in complement.an_array %}
+                <li>{{com}}</li>
+            {% endfor %}
+        </ul>
+    <br>
+        <ul>
+            <li>{{complement.a_map.index}}</li>
+        </ul>
+
 {% endblock content %}
