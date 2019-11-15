@@ -3,4 +3,5 @@ log/
 home-store.txt
 packages/lighttouch-html-interface
 packages/lighttouch-json-interface
+themes/base-theme
 .mp/

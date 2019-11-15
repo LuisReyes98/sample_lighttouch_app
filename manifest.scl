@@ -1,6 +1,7 @@
 imports = {
   lighttouch-json-interface = "packages/lighttouch-json-interface",
   lighttouch-html-interface = "packages/lighttouch-html-interface",
+  base-theme = "themes/base-theme",
 }
 
 lighttouch-json-interface = {
@@ -9,4 +10,8 @@ lighttouch-json-interface = {
 
 lighttouch-html-interface = {
   url = "https://github.com/lighttouch-packages/html-interface.git",
+}
+
+base-theme = {
+  url = "https://github.com/lighttouch-themes/base-theme.git"
 }
