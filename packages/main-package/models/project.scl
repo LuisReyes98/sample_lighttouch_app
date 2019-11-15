@@ -1,0 +1,9 @@
+description = "Project"
+fields = {
+  name = {
+    type = "string"
+  },
+  category = {
+    type = "string"
+  }
+}
