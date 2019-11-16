@@ -16,7 +16,19 @@ local response = send_request({
     },
 })
 
-log.debug(json.from_table(response.body)) -- check the console to see the value
+-- log.debug(json.from_table(response.body)) -- check the console to see the value
+
+
+local response_https = send_request({
+    uri = 'https://jsonplaceholder.typicode.com/todos/1',
+    method="get",
+    headers={
+        ["content-type"]="application/json",
+    },
+})
+
+log.debug(json.from_table(response_https.body)) -- check the console to see the value
+
 
 
 return {
