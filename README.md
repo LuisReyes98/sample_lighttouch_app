@@ -42,13 +42,13 @@ Events are very simple. They get loaded into a global list by reading each packa
 each package of the project must contain a file `events.txt`  where all name of the events of the package will be defined each declared in a new line.
 Like in this example:
 
-    ```
-    get_document_form
-    request_document_html
-    request_document_edit_form
-    list_documents_html
-    list_subdocuments_html
-    ```
+```txt
+get_document_form
+request_document_html
+request_document_edit_form
+list_documents_html
+list_subdocuments_html
+```
 
 ### Packages Rules
 
@@ -67,27 +67,27 @@ array of names of all the events  that correspond to this rule , this allows for
 
 to configure the url a series of rules are set with the use of logicals `and` and `or` to define the necessity of a rule or if it is optional. This makes the rules to have an if like syntax that if is true it will call the actions that correspond to the rule. The options that can be used to build an url are:
 
-* request.method , it can be any http method (https://developer.mozilla.org/es/docs/Web/HTTP/Methods) type; like “GET”, “POST”, “PUT”, “DELETE” , etc.
+* `request.method` , it can be any [http method](https://developer.mozilla.org/es/docs/Web/HTTP/Methods) type; like “GET”, “POST”, “PUT”, “DELETE” , etc.
 
-* #request.path_segments , number of path segments the url has,
-for example `/home/users` is 2 path segments
-* request.path_segments[n] : is a string, where n is any number minor or equal to the amount of path segments, with this it can be specified exactly which name will have each segment of the url
+* `#request.path_segments` , number of path segments the url has, for example `/home/users` is 2 path segments
 
-* request.headers["name"]:match("value") , here name and value are any two strings that are checked in the header of the element when the request is made. Use example:
+* `request.path_segments[n]` : is a string, where n is any number minor or equal to the amount of path segments, with this it can be specified exactly which name will have each segment of the url
+
+* `request.headers["name"]:match("value")` , here name and value are any two strings that are checked in the header of the element when the request is made. Use example:
 
 ```lua
 request.headers["accept"]:match("html")
 ```
 
-* models[request.path_segments[n]]  , checks that the path segment at n (n being any number) belongs to a valid model name , models and their use will be explained below
+* `models[request.path_segments[n]]`  , checks that the path segment at n (n being any number) belongs to a valid model name , models and their use will be explained below
 
-* uuid.check(request.path_segments[n])  , checks that the path segment at n (n being any number) is valid uuid string , uuid being the identifier used by contentdb which will be explained below.
+* `uuid.check(request.path_segments[n])`  , checks that the path segment at n (n being any number) is valid uuid string , uuid being the identifier used by contentdb which will be explained below.
 
-* request.query.name , `name` can be any string that belongs to a valid url param; this rule checks that among the send params there is one with the specified name.
+* `request.query.name`, `name` can be any string that belongs to a valid url param; this rule checks that among the send params there is one with the specified name.
 
 Example of a valid lighttouch rule:
 
-```
+```lua
 priority = 2
 input_parameter = "request"
 events_table = ["witness_html"]
@@ -103,9 +103,12 @@ uuid.check(request.query.witness)
 
 #### Package actions
 
-the actions represent the logic that will be executed once the rules that corresponds to its event is called, at the beginning of the file the must always be the following parameters: 
+the actions represent the logic that will be executed once the rules that corresponds to its event is called, at the beginning of the file the must always be the following parameters:
+
 * `event` , is an array that should hold one element with the name of the event that it belongs to.
+
 * `priority`, should be the same one as in the rules
+
 * `input_parameters` is an array with the name of all the input parameters it will received , it should always have “request”.
 
 Example of the parameters of an action:
@@ -134,7 +137,7 @@ response = {
 }
 
 return response
-``` 
+```
 
 **Code modularity**
 In lua to import or excecute code from differen files the keyword `require` is used. And the  path to the file is defined as they are packages dependencies, for example: we have the file `build.lua` in the following path  `packages/utils/build.lua` in order to add that code inside an actions file, it would need the following syntax: `require “packages.utils.build.”` to properly include the file.
@@ -144,28 +147,29 @@ In lua to import or excecute code from differen files the keyword `require` is u
 Lighttouch apps handle the frontend by the use themes and tera templates
 
 ### Themes
+
 The way lighttouch handles the front-end is by the use of a series of themes that are defined in the themes folder of the application.
 The themes can be as complex as the whole layout of a page or as simple as singular html component that can be reused.
 The themes are composed by a folder that contains the info.yaml file that contains the theme name and dependencies to other themes (parent themes), the html files that are treated as templates, css and any other folders or files that may be used to keep the code orgnaized
 
 themes are automatically registered by lighttouch in the application, the application launches using a singular theme still themes can have as many parent themes as they may need.
 
-
 #### Calling HTML
 
 When and html element is call to be render from the back-end or is included in the template as such:  `{% include "component.html" %}` , lighttouch will automatically look for the template in the  current theme and if it is not found it would search for it in the parent themes iterating over them in the same order that they were declared.
 Graphic example of the search:
-    • looking for component ‘el.html’
-– Current Theme  * index.html
--------Parent theme 1  *  lorem.html
--------Parent theme 2  *  el.html (found)
--------Parent theme 3  * el.html
+
+* looking for the component `el.html` example:
+|-- Current Theme :x:
+| ---- Parent theme 1 :x:
+| ------ Parent theme 2  :heavy_check_mark: `el.html` **found**
+| -------- Parent theme 3  :heavy_exclamation_mark: **Never Reached**
 
 it is important to know that the order of declaration of the parent theme matters when the app is call to include an html element , because if in different themes a file location and name repeats, lighttouch will use the first one it founds
 
-
 #### Tera
-lighttouch uses The template language https://tera.netlify.com/docs/templates/ , to control the designing of the front-end, Tera allows to show variables , use filters for variable , create render conditionals, use of for methods, to include html elements and to allow that a template can extend form another template even if the template doesn't exist in the current theme and it belongs to a parent theme.
+
+Lighttouch uses The template language [Tera](https://tera.netlify.com/docs/templates/), to control the designing of the front-end, Tera allows to show variables , use filters for variable , create render conditionals, use of for methods, to include html elements and to allow that a template can extend form another template even if the template doesn't exist in the current theme and it belongs to a parent theme.
 
 with this in consideration the front-end layout can be very organized by spliting each element in different template files and even split more complex elements into a separated theme to improve the re usability of the html.
 
@@ -175,7 +179,7 @@ The Tera template also allows to treat html as objects that contain blocks of co
 
 with the use of the blocks the re usability of html templates is very easy to achieve, in the following example it can be seen the base.html layout that other templates can extend from
 
-    ```html
+```html
     <!DOCTYPE html>
     <html>
         <!-- grand grand parent -->
@@ -205,21 +209,26 @@ with the use of the blocks the re usability of html templates is very easy to ac
             </div>
         </body>  
     </html>
-    ```
+```
 
 and then for a template to use would be in the following way:
 
-    ```html
+```html
     {% extends "layouts/base.html" %}
     {% block content %}  
         {{ super() }}
         <div site_content id="page_content">
             Site Content
 
-            Lorem Incididunt sunt excepteur esse in laboris. Laboris eiusmod mollit quis id nulla eu occaecat dolor Lorem do dolore aliqua exercitation anim. Est anim incididunt reprehenderit elit ex incididunt ipsum enim veniam sunt anim irure. Irure do minim elit nulla sint.
+            Lorem Incididunt sunt excepteur esse in laboris.
+            Laboris eiusmod mollit quis id nulla eu occaecat d
+            olor Lorem do dolore aliqua exercitation anim.
+            Est anim incididunt reprehenderit elit ex incididu
+            nt ipsum enim veniam sunt anim irure.
+            Irure do minim elit nulla sint.
         </div>
     {% endblock content %}
-    ```
+```
 as you can see in this example there is the call to super inside the content block , this is call for the template to add any content that is in the content block of the parent template.
 
 ##### Tera template extension
@@ -248,11 +257,11 @@ you can include in a templates all the contents of a different template to organ
 also the include is not limited to html filesyou can include the contents of any file that you want as longs as the contents are readeable by html
 for example you can include a css file to be added inside style tags in the header
 
-    ```html
+```html
     <style type="text/css">
       {% include "css/styles.css" %}
     </style>
-    ```
+```
 
 _style folder and files
 
@@ -261,7 +270,7 @@ to improve readability of an html with styles the styles are written in differen
 In order to improve html readability lighttouch uses the _style syntax which consist in using an unique name for the class group that wants to be used, a _style folder , a folder for the template with the template name template.html as the folder name, and the use of .txt files with the element tag and unique name, for example div main_page.txt , yes with the empty space, this .txt will contain the name of all the classes of the respective element in the html,  the classes can be separated by enter or spaces, lighttouch uses the _style syntax by matching the file exact name with an element in the html it that matches the name of the folder the file is contained at.
 the use of this causes to have a very minimalist html that's easy to read, and all the css classes that have been declared in the files will will be automatically added to the html once it is rendered:
 
-    ``` html
+``` html
     <div centered_container >
         <a blue_button href="/?witness={{ id }}">
             Witness
@@ -273,7 +282,7 @@ the use of this causes to have a very minimalist html that's easy to read, and a
             Edit
         </a>
     </div>
-    ```
+```
 
 in this example there are 3 _style identifiers `div centered_container`, `a blue_button`, `a yellow_button` each of this identifiers contains a file inside the template folder with all the css classes of the element, for this example in the previous html these are the files used:
 
@@ -298,7 +307,7 @@ in this example there are 3 _style identifiers `div centered_container`, `a bl
 
 * a yellow_button.txt
 
-    ```
+    ```txt
     bg-yellow-500
     rounded-full
     py-2
@@ -323,11 +332,11 @@ The whole project layout would look like the following
 
 the `lighttouch.scl` file is configuration file where settings are defined using scl ( [a simpl configuration language](https://github.com/foundpatterns/scl) ) , some are obligatory like: `theme` , `log_level` , `sitename`.
 
-    ```scl
+```scl
     theme = "main theme name",
     log_level = "trace",  # log level for development
     sitename = "name of the site",
-    ```
+```
 
 any other setting value is completely optional and depends what you want to do, in here you can defined any secret key or api codes that your app uses to avoid having them in any place that could exposed to the user.
 
@@ -335,7 +344,7 @@ Also a value can be set to include another .scl file to load the information as 
 
 Example of a  `lighttouch.scl` file:
 
-    ```scl
+```scl
     settings = {
         theme = "found-patterns-theme",
         log_level = "trace",
@@ -343,15 +352,15 @@ Example of a  `lighttouch.scl` file:
         slideshow = "c800a360-d198-4a87-877e-b353f7dd0a9d",
         chat = include "chat.scl",
     }
-    ```
+```
 
 chat.scl contents:
 
-    ```scl
+```scl
     header_title = "My Chat"
 
     header_image = "https://avatars0.githubusercontent.com/u/43634206?s=200&v=4"
-    ```
+```
 
 the values set in settings can be accessed in the packages code with the syntax `settings.name_of_the_property` .  Making setting have a behavior of a key word defined lua table , also known as a dictionary in other programming languages.
 
@@ -366,7 +375,7 @@ Also bellow for each package an url must be defined to where the project will be
 
 Example of a `manifest.scl` file
 
-    ```scl
+```scl
     imports = {
         send-file-package = "packages/send-file-package",
         lighttouch-html-interface = "packages/lighttouch-html-interface",
@@ -385,7 +394,7 @@ Example of a `manifest.scl` file
     lighttouch-json-interface = {
         url = "https://github.com/lighttouch-packages/json-interface.git",
     }
-    ```
+```
 
 once the file is ready run the command `mp unpack` and machu pichu will automatically donwload the packages and place them in their corresponding folder.
 To read further about the **machu pichu** package manager you can check the repository [machu pichu](https://github.com/foundpatterns/machu-picchu)
@@ -406,7 +415,7 @@ Also lighttouch allows the use of models, inside the packages that are a definit
 To use the models is need to implement the packages of `html-interface` and `json-interface` allowing to create documents that have the fields declared in the models .scl file.
 An example of models file is the following `message.scl`
 
-    ```scl
+```scl
     description="Message"
     fields={
         title={
@@ -414,7 +423,7 @@ An example of models file is the following `message.scl`
             type="string",
         },
     }
-    ```
+```
 
 ### Built in packages for models handling
 
@@ -428,8 +437,7 @@ Once the model file is created it is ready to used, to interact with ui it is sh
 
 ### Built in themes
 
-* base-theme
-even though the use of base theme is totally optional and you can develop your own custom views for the handling the models views, base-theme (https://github.com/lighttouch-themes/base-theme)  already comes with a ready to be used interface to the handling of models , all you need to do is the correct setup (explained in the following segment) .
+* **base-theme**: even though the use of base theme is totally optional and you can develop your own custom views for the handling the models views, [base-theme](https://github.com/lighttouch-themes/base-theme)  already comes with a ready to be used interface to the handling of models , all you need to do is the correct setup (explained in the following segment) .
 
 ### Setting up  html interface in your project main theme
 
@@ -464,7 +472,7 @@ html-interface supports for a document model to reference another, to define it 
 Example:
 `comment` model references `post` model to this a field must be added in the comment.scl model file
 
-    ```scl
+```scl
     description = "Comment"
         fields = {
         title = {
@@ -477,7 +485,7 @@ Example:
             type = "uuid"
         }
     }
-    ```
+```
 
 ### Custom use of contentdb and the models
 
@@ -524,7 +532,7 @@ executing api request to any rest or authenticated api service is easy with the 
 ligttouch uses torchbear http module to execute HTTP methods to a server
 the syntax to execute them in the back-end is the following
 
-    ```lua
+```lua
     local response = send_request({
         uri = 'https://jsonplaceholder.typicode.com/todos/1',
         method="get",
@@ -532,6 +540,6 @@ the syntax to execute them in the back-end is the following
             ["content-type"]="application/json",
         },
     })
-    ```
+```
 
 this simple way one can execute all types of requests to a server
