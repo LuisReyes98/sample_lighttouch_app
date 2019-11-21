@@ -3,6 +3,7 @@
 ## What is Torchbear ?
 
 Torchbear is web framework build in rust, to create a general-purpose programming environment. Torchbear is the kernel of lighttouch.
+You will need to [install torchbear.](https://github.com/foundpatterns/torchbear#install)
 
 ## What is Speakeasy ?
 
@@ -14,7 +15,9 @@ Speakeasy works with the PUC-Rio interpreter, using  Lua for basic data struct
 
 ## What is Lighttouch ?
 
-Lighttouch is a framework that makes complex application development simpler. It does this through broad use of component-oriented design intended to offer programmers a well-researched alternative to starting with a blank canvas
+Lighttouch is a framework that makes complex application development simpler. It does this through broad use of component-oriented design intended to offer programmers a well-researched alternative to starting with a blank canvas.
+You will need to [install lighttouch.](https://github.com/foundpatterns/lighttouch#installation)
+
 
 ## Building your first app in lighttouch
 
@@ -27,19 +30,20 @@ Lighttouch backend is handle in the form of Packages; packages are Lighttouch's 
 
 This basically means that packages have actions, events, and rules. Following a simple event driven interface
 
-* the rules represent the url configuration , path name, valid atributes, and priority of check in comparison with other paths
+* **the rules** represent the url configuration , path name, valid atributes, and priority of check in comparison with other paths, is like an if conditional to control the path flow
 
-* the actions represent all the logic needed for the corresponding url
+* **the actions** represent all the logic needed for the corresponding url, any requests, database actions, custom logic etc.
 
-* And the events of each package represent the connection between the rules and the actions, these are defined in the events.txt of the package.
+* **the events**  represent the connection between the rules and the actions, these are defined in the events.txt of the package.
 
 ### Events
 
 Events are very simple. They get loaded into a global list by reading each package's `events.txt` file. They can be disabled in a `disabled_events.txt` file.
+They control the connection between actions and rules. 
 
-### Structure of the event driven code
+#### Structure of the event driven code
 
-each package of the project must contain a file `events.txt`  where all name of the events of the package will be defined each declared in a new line.
+In order for the packages events to work they must be declared in the file `events.txt` that exist within the package, in here the name of each event of the package will be defined separated by a new line.
 Like in this example:
 
 ```txt
@@ -50,13 +54,13 @@ list_documents_html
 list_subdocuments_html
 ```
 
-### Packages Rules
+#### Packages Rules
 
 in a package the rules represent the configuration for the url paths of an action
 the format to create on consists in declaring  first `priority` , `input_parameter` and `events_table` , at the beginning of the file.
 
-* `priority` is a number to implicitly declare the order in which the rules are check in case two or more rules have similar parameters, the one with the number closest to 1 will be the first one checked to be used.
-This allows for identical url perform different when a parameter is send for example
+* `priority` is a number to implicitly declare the order of relevance of the url , it directly affects in which order the rules are check in order to resolve an url.
+This allows for custom control of the behavior of the url, for example to set  urls that will respond to a different action if a parameter is send.
 
 * `input_parameter` name of the variable that is received as the request, should be set to ‘request’ unless a different name is necessary
 
@@ -107,7 +111,7 @@ the actions represent the logic that will be executed once the rules that corres
 
 * `event` , is an array that should hold one element with the name of the event that it belongs to.
 
-* `priority`, should be the same one as in the rules
+* `priority`, number to implicitly determined the priority level of the action, should be equal to the one in the rules
 
 * `input_parameters` is an array with the name of all the input parameters it will received , it should always have “request”.
 
@@ -122,7 +126,7 @@ input_parameters = ["request"]
 afterwards all the code and logic to be performed in this view is executed there must be a return. In the case that this action is one of many that where called by the same rule it may not have a return, but one of the called actions must have a return.
 
 The return is a table that contains a header and a body , ready to be a json response.
-In case of being a normal html view it must be scecified to `render` and html , which receives the route to the html in the current theme, and a table of variables to render in the html.
+In case of being a normal html view it must be specified to `render` and html , which receives the route to the html in the current theme, and a table of variables to render in the html.
 
 Example of action return of a html:
 
@@ -139,8 +143,8 @@ response = {
 return response
 ```
 
-**Code modularity**
-In lua to import or excecute code from differen files the keyword `require` is used. And the  path to the file is defined as they are packages dependencies, for example: we have the file `build.lua` in the following path  `packages/utils/build.lua` in order to add that code inside an actions file, it would need the following syntax: `require “packages.utils.build.”` to properly include the file.
+#### Code modularity
+In order to import or execute code from different files in Lua the keyword `require` must be used. And the  path to the file is defined as they are packages dependencies, for example: we have the file `build.lua` in the following path  `packages/utils/build.lua` in order to add that code inside an actions file, it would need the following syntax: `require “packages.utils.build.”` to properly include the file.
 
 ## Themes and Style engine
 
@@ -148,11 +152,21 @@ Lighttouch apps handle the frontend by the use themes and tera templates
 
 ### Themes
 
-The way lighttouch handles the front-end is by the use of a series of themes that are defined in the themes folder of the application.
-The themes can be as complex as the whole layout of a page or as simple as singular html component that can be reused.
-The themes are composed by a folder that contains the info.yaml file that contains the theme name and dependencies to other themes (parent themes), the html files that are treated as templates, css and any other folders or files that may be used to keep the code orgnaized
+The way lighttouch handles the frontend is by the use of a series of themes that are defined in the themes folder of the application.
+Each theme can be as complex as the whole layout of a page or as simple as singular html component that can be reused.
+The themes are composed by a folder that contains the info.yaml file that contains the theme name and dependencies to other themes (parent themes), the html files that are treated as templates, css and any other folders or files that may be used to keep the code organized
 
-themes are automatically registered by lighttouch in the application, the application launches using a singular theme still themes can have as many parent themes as they may need.
+themes are automatically registered by lighttouch in the application, the application launches using a singular theme. Still to have access to the components of other themes these themes must be declared a parents of the main theme.
+
+#### Tera
+
+Lighttouch uses The template language [Tera](https://tera.netlify.com/docs/templates/), to control the designing of the frontend, Tera allows to show variables , use filters for variable , create render conditionals, use of for methods to iterate over data.
+
+To include html elements and to allow that a template can extend form another template even if the template doesn't exist in the current theme and it belongs to a parent theme.
+
+with this in consideration the front-end layout can be very organized by spliting each element in different template files and even split more complex elements into a separated theme to improve the re usability of the html.
+
+The Tera template also allows to treat html as objects that contain blocks of content and that can extend from other html elements
 
 #### Calling HTML
 
@@ -167,15 +181,25 @@ Graphic example of the search:
 
 it is important to know that the order of declaration of the parent theme matters when the app is call to include an html element , because if in different themes a file location and name repeats, lighttouch will use the first one it founds
 
-#### Tera
+##### Including elements in the html
 
-Lighttouch uses The template language [Tera](https://tera.netlify.com/docs/templates/), to control the designing of the front-end, Tera allows to show variables , use filters for variable , create render conditionals, use of for methods, to include html elements and to allow that a template can extend form another template even if the template doesn't exist in the current theme and it belongs to a parent theme.
+Using the keyword include:
 
-with this in consideration the front-end layout can be very organized by spliting each element in different template files and even split more complex elements into a separated theme to improve the re usability of the html.
+```tera
+  {% include "chunks/footer.html" %}
+```
 
-The Tera template also allows to treat html as objects that contain blocks of content and that can extend from other html elements
+you can include in a templates all the contents of a different template to organize the code of the layouts more easily
+also the include is not limited to html filesyou can include the contents of any file that you want as longs as the contents are readeable by html
+for example you can include a css file to be added inside style tags in the header
 
-##### Tera template Block
+```html
+    <style type="text/css">
+      {% include "css/styles.css" %}
+    </style>
+```
+
+##### Tera template Blocks
 
 with the use of the blocks the re usability of html templates is very easy to achieve, in the following example it can be seen the base.html layout that other templates can extend from
 
@@ -231,39 +255,23 @@ and then for a template to use would be in the following way:
 ```
 as you can see in this example there is the call to super inside the content block , this is call for the template to add any content that is in the content block of the parent template.
 
-##### Tera template extension
+##### Extending html
 
-the extension feature allows for the same layout to be used and only change the content within the layout the template extension must be done at the beginning of the file, and the syntax to extend from a file in the same theme it must be declared specifying the path to the file in the theme:
+the extension feature is similar to what in Object Oriented programming languages is known as inheritance, this allows for the same layout to be used and only change the content within the layout. 
+The declaration for the extension must be done at the beginning of the file, and the syntax to extend from a file in the same theme it must be declared specifying the path to the file in the theme:
 
 ```tera
 {% extends "chunks/modal.html" %}
 ```
 
-also If you wish to extend from a template in the parent theme thats also possible by adding `^/` at the beginning of the path, performing a search for a template that is in the described location in one of the parent themes.
+also If you wish to extend from a template that exists in the parent theme of your current theme that is also possible by adding `^/` at the beginning of the path. Ligttouch witll perform a search to find the html for Tera to extend, this search is executed the same way it is done for the **include html** will perform a search for a template that is in the described location in one of the parent themes.
 
 ```tera
 {% extends "^/chunks/modal.html" %}
 ```
 
-##### including elements in the html
 
-Using the keyword include:
-
-```tera
-  {% include "chunks/footer.html" %}
-```
-
-you can include in a templates all the contents of a different template to organize the code of the layouts more easily
-also the include is not limited to html filesyou can include the contents of any file that you want as longs as the contents are readeable by html
-for example you can include a css file to be added inside style tags in the header
-
-```html
-    <style type="text/css">
-      {% include "css/styles.css" %}
-    </style>
-```
-
-_style folder and files
+###### _style folder and files
 
 to improve readability of an html with styles the styles are written in different css classes and then added to the html, still  in some cases we can end up with an html element that contains too many classes and is hard to read.
 
