@@ -1,1 +1,4 @@
 name: main-theme
+parents:
+  - layout-theme
+  - base-theme

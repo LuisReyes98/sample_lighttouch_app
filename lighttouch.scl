@@ -1,7 +1,10 @@
 settings = {
   theme = "main-theme",
   log_level = "trace",
-  sitename = "Lighttouch",
+  sitename = "My blog",
   user = "admin",
   password = "admin",
+  secret_important_information = "xxxxxxxxxxxxxxxxx",
+  api_key = "xxxxxxxxxxxxxxxxxxxxx",
+  complement = include "complement.scl",
 }
