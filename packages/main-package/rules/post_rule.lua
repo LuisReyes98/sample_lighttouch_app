@@ -6,4 +6,4 @@ request.method == "GET"
 and
 #request.path_segments == 1
 and
-request.path_segments[1] == "posts"
+request.path_segments[1] == "posts" -- /posts
