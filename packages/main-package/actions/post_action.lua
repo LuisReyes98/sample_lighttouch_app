@@ -2,6 +2,13 @@ event = ["view_posts"]
 priority = 2
 input_parameters = ["request"]
 
+require "packages.main-package.mytools.base"
+require "packages.main-package.mytools.add"
+
+local val = mytools.add(2,4)
+
+log.debug(val)
+
 return {
     status = 200,
     headers = {
