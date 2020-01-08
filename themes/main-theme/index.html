@@ -1,5 +1,9 @@
 {% extends "^/layout/layout.html" %}
 
+{% block javascript %}
+    {{super()}}
+{% endblock javascript %}
+
 {% block content %}
     {{super()}}
     <h1>Welcome to Lighttouch powered by Torchbear</h1>
