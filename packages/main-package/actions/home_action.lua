@@ -10,7 +10,7 @@ local model = models['project']
 -- http request
 local response = send_request({
     uri = 'http://ron-swanson-quotes.herokuapp.com/v2/quotes',
-    method="get",
+    method="get", -- get post put
     headers={
         ["content-type"]="application/json",
     },

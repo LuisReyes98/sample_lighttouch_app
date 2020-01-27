@@ -7,7 +7,7 @@ require "packages.main-package.mytools.add"
 
 local val = mytools.add(2,4)
 
-log.debug(val)
+log.debug(val) -- 6
 
 return {
     status = 200,
